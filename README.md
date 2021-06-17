@@ -1,4 +1,4 @@
-# Learning the topology of a bayesian networkfrom a database of cases using the K2 algorithm
+# Learning the topology of a Bayesian Network from a database of cases using the K2 algorithm
 ## Final project of “Advanced Statistics for Physics Analysis”
 
 #### [Javier Gerardo Carmona](https://github.com/eigen-carmona/)
