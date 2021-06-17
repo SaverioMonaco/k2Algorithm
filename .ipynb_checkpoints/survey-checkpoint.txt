@@ -1,0 +1,7 @@
+A S E O R T
+adult big high emp F car
+adult small uni emp M car
+adult big uni emp F train
+old big high emp M train
+adult big high emp F other
+adult big high emp M other
