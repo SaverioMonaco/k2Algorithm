@@ -1,11 +1,5 @@
 library(tidyverse)
-
-# Installed just by typing install.packages('bnlearn')
 library(bnlearn)
-
-# This was a bit more complicated to install:
-# install.packages("BiocManager")
-# BiocManager::install("Rgraphviz")
 library(Rgraphviz)
 
 #' @rdname learn.network
