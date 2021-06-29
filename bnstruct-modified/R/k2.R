@@ -1,9 +1,10 @@
 library(dplyr)
 
-K2 <- function(data, u)
+K2 <- function(dataset, u)
     {
-        n.nodes <- ncol(data)# G
+        n.nodes <- num.variables(dataset)# G
         curr.g <- matrix(0L,n.nodes,n.nodes) # integers!  G
+        data <- as.data.frame(raw.data(dataset))
 
         #TODO: Should an init.net be taken into account?
 
@@ -15,11 +16,10 @@ K2 <- function(data, u)
                 pred <- 1:(i-1) # Preceding nodes
                 left <- pred
                 parents <- c()
-                p.old <- f(BN,D,i,
-                parents)
+                p.old <- f(data,i,parents)
                 ok.to.proceed <- TRUE
 
-                while(ok.to.proceed & (n.parents < u) )
+                while(ok.to.proceed & (n.parents < u) & length(left) > 0)
                     {
                         # Which preceding nodes do not have an arc to the node at hand?
                         #mask <- !curr.g[pred,i]
@@ -28,12 +28,13 @@ K2 <- function(data, u)
                         g <- function(n.p){f(data,i,c(parents,n.p))}
                         proposal <- lapply(left,g)
                         j <- which.max(proposal)
-                        p.new <- proposal[j]
+                        p.new <- proposal[[j]]
                         if(p.new > p.old){
                             curr.g[j,i] = 1L # The j-th node has been chosen as parent for the i-th one.
                             parents <- c(parents,left[j]) # Adding the chosen node as parent of the i-th node
                             n.parents <- n.parents + 1 #sum(curr.g[,i])
                             left <- left[-c(j)] # Removing from options the node that has been added as parent of the i-th node.
+                            p.old <- p.new
                         }
                         else{ok.to.proceed <- FALSE}
                     }

@@ -493,51 +493,11 @@ setMethod("learn.structure",
             # Saving in dag() gould cause problems in case of loops.
             # Shall we assume the users know what they're doing?
             if (algo == "k2")
-                {   
-                    K2 <- function(N,D,u)
-                      {
-                        BN <- empty.graph(nodes = N)
-                    
-                        for(i in 2:length(N))
-                            {
-                                p.old <- f(BN,D,i)
-                                ok.to.proceed <- TRUE
-                                j <- i - 1
-                                                
-                                while(ok.to.proceed & (length(parents(BN,nodes(BN)[i])) < u) )
-                                    {   
-                                        j <- i - 1
-                                        proposal <- c()
-                                    
-                                        while(j > 0)
-                                            {
-                                                    BN.proposal <- set.arc(BN, from=nodes(BN)[j], to=nodes(BN)[i])
-                                                    proposal <- c(proposal, f(BN.proposal,D,i))
-
-                                                    j <- j - 1 
-                                            }
-                                        
-                                        p.new <- max(proposal)
-                                        best.BN   <- set.arc(BN, from=nodes(BN)[i - match(max(proposal),proposal)], to=nodes(BN)[i])
-                                        if(p.new > p.old)
-                                            {
-                                                    p.old <- p.new
-                                                    BN <- best.BN
-                                            }
-                                        else{ok.to.proceed <- FALSE}
-                                    }
-                                
-                            }
-                        
-                        return(BN)
-                    }
-                    
+                {
                     bnstruct.log("USING CUSTOM METHOD: K2")
                     #print(D)
-                    k2.bn <- K2(variables(bn),D,3)
-                    graphviz.plot(k2.bn)
-                    
-                    
+                    dag(bn) <- K2(dataset, max.parents)
+                    #graphviz.plot(k2.bn)
                 }
             if (algo == "mmpc")
             {
