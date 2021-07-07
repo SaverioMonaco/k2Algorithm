@@ -6,8 +6,6 @@ K2 <- function(dataset, u)
         curr.g <- matrix(0L,n.nodes,n.nodes) # integers!  G
         data <- as.data.frame(raw.data(dataset))
 
-        #TODO: Should an init.net be taken into account?
-
         for(i in 2:n.nodes)
             {
 
@@ -21,10 +19,6 @@ K2 <- function(dataset, u)
 
                 while(ok.to.proceed & (n.parents < u) & length(left) > 0)
                     {
-                        # Which preceding nodes do not have an arc to the node at hand?
-                        #mask <- !curr.g[pred,i]
-                        #choosable <- pred[mask]
-                        #parents <- pred[curr.g[pred,i]==1]
                         g <- function(n.p){f(data,i,c(parents,n.p))}
                         proposal <- lapply(left,g)
                         j <- which.max(proposal)

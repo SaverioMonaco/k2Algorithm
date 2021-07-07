@@ -1,6 +1,4 @@
 library(tidyverse)
-library(bnlearn)
-library(Rgraphviz)
 
 #' @rdname learn.network
 #' @aliases learn.network,BN
@@ -495,9 +493,7 @@ setMethod("learn.structure",
             if (algo == "k2")
                 {
                     bnstruct.log("USING CUSTOM METHOD: K2")
-                    #print(D)
                     dag(bn) <- K2(dataset, max.parents)
-                    #graphviz.plot(k2.bn)
                 }
             if (algo == "mmpc")
             {
