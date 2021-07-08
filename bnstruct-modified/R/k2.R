@@ -14,7 +14,7 @@ K2 <- function(dataset, u)
                 pred <- 1:(i-1) # Preceding nodes
                 left <- pred
                 parents <- c()
-                p.old <- f(data,i,parents)
+                lp.old <- f(data,i,parents)
                 ok.to.proceed <- TRUE
 
                 while(ok.to.proceed & (n.parents < u) & length(left) > 0)
@@ -22,13 +22,13 @@ K2 <- function(dataset, u)
                         g <- function(n.p){f(data,i,c(parents,n.p))}
                         proposal <- lapply(left,g)
                         j <- which.max(proposal)
-                        p.new <- proposal[[j]]
-                        if(p.new > p.old){
+                        lp.new <- proposal[[j]]
+                        if(lp.new > lp.old){
                             curr.g[j,i] = 1L # The j-th node has been chosen as parent for the i-th one.
                             parents <- c(parents,left[j]) # Adding the chosen node as parent of the i-th node
                             n.parents <- n.parents + 1 #sum(curr.g[,i])
                             left <- left[-c(j)] # Removing from options the node that has been added as parent of the i-th node.
-                            p.old <- p.new
+                            lp.old <- lp.new
                         }
                         else{ok.to.proceed <- FALSE}
                     }
@@ -39,9 +39,9 @@ K2 <- function(dataset, u)
 
 ############ AUXILIARY FUNCTIONS ###############
 
-prob.noparents <- function(data,namecol,prod)
+prob.noparents <- function(data,namecol,lprod)
     {
-        lprod <- log(prod)
+        #lprod <- log(prod)
         col <- dplyr::pull(data, namecol)
         nunique <- length(unique(col))
         lprod <- lprod+lfactorial(nunique-1)
@@ -54,16 +54,16 @@ prob.noparents <- function(data,namecol,prod)
             }
         lprod <- lprod - lfactorial(den)
 
-        nprod <- exp(lprod)
+        #nprod <- exp(lprod)
     
-        return(nprod)
+        return(lprod)
     }
 
 is.eq <- function(row1,row2){return(row1 == row2)}
 
-prob.parents <- function(data,namecol,prod,parents)
+prob.parents <- function(data,namecol,lprod,parents)
     {
-        lprod <- log(prod)
+        #lprod <- log(prod)
         col <- dplyr::pull(data, namecol)
         n.parents <- length(parents)
         col.parents <- data[parents]
@@ -93,9 +93,9 @@ prob.parents <- function(data,namecol,prod,parents)
                 lprod <- lprod+lfactorial(r - 1) - lfactorial(nij + r - 1)
             }
 
-        nprod <- exp(lprod)
+        #nprod <- exp(lprod)
     
-        return(nprod)
+        return(lprod)
 
     }
 
@@ -119,12 +119,13 @@ prob.model <- function(BN,D)
 
 f <- function(data, i, parents)
             {
-                prod <- 1
+                #prod <- 1
+                lprod <- 0
                 colname <- colnames(data)[i]
                 if(length(parents) == 0)
-                    {prod <- prob.noparents(data,colname,prod)}
+                    {lprod <- prob.noparents(data,colname,lprod)}
                 else
-                    {prod <- prob.parents(data,colname,prod,parents)}
+                    {lprod <- prob.parents(data,colname,lprod,parents)}
                
-                return(prod)
+                return(lprod)
             }
